@@ -1,0 +1,4 @@
+INPUT_SANITISATION_STATUS=mostly_done # Just a few edge cases left. Like, all of them
+CROSS_SITE_SCRIPTING_DEFENSE=browser_should_handle_it # Not our problem
+BACKUP_STRATEGY=hope_for_the_best
+CONFIDENTIAL_FILE_LOCATION=/internal/config.txt # You're already here, so...
