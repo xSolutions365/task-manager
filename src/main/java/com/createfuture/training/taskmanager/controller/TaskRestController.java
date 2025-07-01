@@ -2,6 +2,12 @@ package com.createfuture.training.taskmanager.controller;
 
 import com.createfuture.training.taskmanager.model.Task;
 import com.createfuture.training.taskmanager.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +25,17 @@ public class TaskRestController {
         this.taskService = taskService;
     }
 
+    /**
+     * Get all tasks
+     *
+     * @return list of all tasks
+     */
+    @Operation(summary = "Get all tasks")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful operation", 
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Task.class)))),
+        @ApiResponse(responseCode = "400", description = "Not Found", content = @Content)
+    })
     // GET /api/tasks
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
@@ -59,5 +76,23 @@ public class TaskRestController {
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         Task updatedTask = taskService.updateTask(id, task.getTitle());
         return updatedTask != null ? ResponseEntity.ok(updatedTask) : ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Search tasks by title (partial match)
+     *
+     * @param title the partial title to search for
+     * @return list of matching tasks
+     */
+    @Operation(summary = "Search tasks by title (partial match)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Tasks found",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Task.class)))),
+        @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content)
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<Task>> searchTasksByTitle(@RequestParam String title) {
+        List<Task> tasks = taskService.searchTasksByTitle(title);
+        return ResponseEntity.ok(tasks);
     }
 }

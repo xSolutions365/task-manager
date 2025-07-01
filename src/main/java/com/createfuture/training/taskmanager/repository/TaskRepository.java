@@ -23,8 +23,8 @@ public class TaskRepository {
     );
 
     public Task addTask(String title) {
-        String sql = "INSERT INTO tasks (done, title) VALUES (false, '" + title + "')";
-        jdbcTemplate.execute(sql);
+        String sql = "INSERT INTO tasks (done, title) VALUES (?, ?)";
+        jdbcTemplate.update(sql, false, title);
         return getLastInsertedTaskByTitle(title);
     }
 
@@ -68,5 +68,11 @@ public class TaskRepository {
     public int updateTask(Task task) {
         String sql = "UPDATE tasks SET title = ?, done = ? WHERE id = ?";
         return jdbcTemplate.update(sql, task.getTitle(), task.isDone(), task.getId());
+    }
+
+    public List<Task> findByTitleContaining(String titlePart) {
+        String sql = "SELECT * FROM tasks WHERE LOWER(title) LIKE ?";
+        String pattern = "%" + titlePart.toLowerCase() + "%";
+        return jdbcTemplate.query(sql, taskMapper, pattern);
     }
 }
