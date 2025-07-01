@@ -69,4 +69,10 @@ public class TaskRepository {
         String sql = "UPDATE tasks SET title = ?, done = ? WHERE id = ?";
         return jdbcTemplate.update(sql, task.getTitle(), task.isDone(), task.getId());
     }
+
+    public List<Task> findByTitleContaining(String titlePart) {
+        String sql = "SELECT * FROM tasks WHERE LOWER(title) LIKE ?";
+        String pattern = "%" + titlePart.toLowerCase() + "%";
+        return jdbcTemplate.query(sql, taskMapper, pattern);
+    }
 }

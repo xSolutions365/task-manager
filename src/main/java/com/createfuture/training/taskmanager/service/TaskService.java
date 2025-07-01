@@ -50,4 +50,8 @@ public class TaskService {
         }
         return task;
     }
+
+    public List<Task> searchTasksByTitle(String titlePart) {
+        return taskRepository.findByTitleContaining(titlePart);
+    }
 }

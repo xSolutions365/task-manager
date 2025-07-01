@@ -105,4 +105,19 @@ class TaskRestControllerTest {
         mockMvc.perform(patch("/api/tasks/1/done"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("GET /api/tasks/search?title=foo should return tasks matching partial title")
+    void shouldReturnTasksMatchingPartialTitle() throws Exception {
+        List<Task> mockTasks = Arrays.asList(
+            new Task(1L, "fooBar", false),
+            new Task(2L, "barFoo", false)
+        );
+        when(taskService.searchTasksByTitle("foo")).thenReturn(mockTasks);
+
+        mockMvc.perform(get("/api/tasks/search").param("title", "foo"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title", containsStringIgnoringCase("foo")))
+                .andExpect(jsonPath("$[1].title", containsStringIgnoringCase("foo")));
+    }
 }
