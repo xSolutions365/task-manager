@@ -23,8 +23,8 @@ public class TaskRepository {
     );
 
     public Task addTask(String title) {
-        String sql = "INSERT INTO tasks (done, title) VALUES (false, '" + title + "')";
-        jdbcTemplate.execute(sql);
+        String sql = "INSERT INTO tasks (done, title) VALUES (?, ?)";
+        jdbcTemplate.update(sql, false, title);
         return getLastInsertedTaskByTitle(title);
     }
 
