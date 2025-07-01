@@ -50,4 +50,8 @@ public class TaskService {
         }
         return task;
     }
+    // Search tasks by title (case-insensitive, partial match)
+    public List<Task> searchTasks(String query) {
+        return taskRepository.searchByTitle(query);
+    }
 }

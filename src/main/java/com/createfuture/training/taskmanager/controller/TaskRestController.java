@@ -34,6 +34,17 @@ public class TaskRestController {
         return ResponseEntity.ok(tasks);
     }
 
+    // GET /api/tasks/search?q=dog
+    @Operation(summary = "Search tasks by title")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of matching tasks returned")
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<Task>> searchTasks(@RequestParam("q") String query) {
+        List<Task> results = taskService.searchTasks(query);
+        return ResponseEntity.ok(results);
+    }
+
     // GET /api/tasks/top?n=5
     @Operation(summary = "Get top N tasks")
     @ApiResponses({

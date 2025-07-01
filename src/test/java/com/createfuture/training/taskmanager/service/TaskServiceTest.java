@@ -108,4 +108,31 @@ public class TaskServiceTest {
         boolean result = taskService.markDone(999L); // Use a non-existent ID
         assertFalse(result);
     }
+
+    @Test
+    void searchTasks_ShouldReturnMatchingTasks() {
+        taskService.addTask("feed dog");
+        taskService.addTask("walk dog");
+        taskService.addTask("buy milk");
+
+        List<Task> results = taskService.searchTasks("dog");
+        assertEquals(2, results.size());
+        assertTrue(results.stream().anyMatch(t -> t.getTitle().equalsIgnoreCase("feed dog")));
+        assertTrue(results.stream().anyMatch(t -> t.getTitle().equalsIgnoreCase("walk dog")));
+    }
+
+    @Test
+    void searchTasks_ShouldBeCaseInsensitive() {
+        taskService.addTask("Feed Dog");
+        List<Task> results = taskService.searchTasks("dog");
+        assertEquals(1, results.size());
+        assertEquals("Feed Dog", results.get(0).getTitle());
+    }
+
+    @Test
+    void searchTasks_ShouldReturnEmptyListIfNoMatch() {
+        taskService.addTask("feed cat");
+        List<Task> results = taskService.searchTasks("dog");
+        assertTrue(results.isEmpty());
+    }
 }

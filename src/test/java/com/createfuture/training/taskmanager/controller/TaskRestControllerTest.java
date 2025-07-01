@@ -105,4 +105,27 @@ class TaskRestControllerTest {
         mockMvc.perform(patch("/api/tasks/1/done"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("GET /api/tasks/search?q=dog should return matching tasks")
+    void shouldReturnMatchingTasksForSearch() throws Exception {
+        List<Task> mockTasks = Arrays.asList(new Task("feed dog"), new Task("walk dog"));
+        when(taskService.searchTasks("dog")).thenReturn(mockTasks);
+
+        mockMvc.perform(get("/api/tasks/search?q=dog"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(2)))
+                .andExpect(jsonPath("$[0].title", containsStringIgnoringCase("dog")))
+                .andExpect(jsonPath("$[1].title", containsStringIgnoringCase("dog")));
+    }
+
+    @Test
+    @DisplayName("GET /api/tasks/search?q=cat should return empty list if no match")
+    void shouldReturnEmptyListIfNoMatchForSearch() throws Exception {
+        when(taskService.searchTasks("cat")).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/tasks/search?q=cat"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(0)));
+    }
 }
