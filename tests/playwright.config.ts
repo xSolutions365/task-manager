@@ -18,12 +18,6 @@ export default defineConfig({
   workers: 1,
   reporter: 'html',
   // MCP (Model Context Protocol) server configuration
-  webServer: {
-    command: 'npx @playwright/mcp@latest',
-    port: 62700, // MCP port, you can change this
-    timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
-  },
   use: {
     // No baseURL needed as tests specify full URLs
     trace: 'on',
