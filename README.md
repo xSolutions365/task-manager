@@ -117,23 +117,16 @@ Run in your terminal:
 code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
 ```
 
-### 6. MCP Server Configuration Options
+### 6. MCP Server Configuration
 
-You have two ways to run the MCP server:
+You must now run the MCP server manually in a separate terminal:
 
-#### Option A: Automatic MCP Server (via playwright.config.ts)
-- Best for simple test runs
-- The MCP server starts automatically when you run tests
-- Uses the `webServer` config in `playwright.config.ts` (enabled by default)
+```sh
+cd tests
+npx @playwright/mcp@latest
+```
 
-#### Option B: Manual MCP Server (separate terminal)
-- Best for interactive agent usage, debugging, or developing tests
-- Start the MCP server in a dedicated terminal:
-  ```sh
-  cd tests
-  npx @playwright/mcp@latest
-  ```
-- Comment out the `webServer` section in `playwright.config.ts` to prevent duplicate servers
+> **Note:** The MCP server will not start automatically. Always start it manually before running Playwright tests.
 
 ### 7. Running Playwright Tests
 
